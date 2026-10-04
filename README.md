@@ -41,17 +41,20 @@ Run the tests:
 
 ## API overview
 
-| Resource           | Base path           |
-|--------------------|---------------------|
-| Employees          | `/employees`        |
-| Teams              | `/teams`            |
-| Team memberships   | `/team-memberships` |
-| Projects           | `/projects`         |
-| Tasks              | `/tasks`            |
-| Comments           | `/comments`         |
+| Resource         | Base path           | Endpoints                                                                                  |
+|------------------|---------------------|--------------------------------------------------------------------------------------------|
+| Employees        | `/employees`        | `GET /`, `GET /{email}`, `POST /`, `DELETE /{id}`                                          |
+| Teams            | `/teams`            | `GET /`, `GET /{name}`, `POST /`, `PUT /{id}`, `DELETE /{id}`                              |
+| Team memberships | `/team-memberships` | `GET /`, `GET /{id}`, `GET /team/{teamId}`, `GET /employee/{employeeId}`, `POST /`, `DELETE /{id}` |
+| Projects         | `/projects`         | `GET /`, `GET /{id}`, `GET /team/{teamId}`, `POST /`, `DELETE /{id}`                       |
+| Tasks            | `/tasks`            | `GET /`, `GET /{id}`, `GET /project/{projectId}`, `GET /employee/{employeeId}`, `POST /`, `DELETE /{id}` |
+| Comments         | `/comments`         | `GET /`, `GET /{id}`, `GET /task/{taskId}`, `POST /`, `DELETE /{id}`                       |
 
-Each resource supports the usual `GET`, `POST`, `PUT`, and `DELETE` operations, plus lookups such as
-`/comments/task/{taskId}` and `/comments/employee/{employeeId}`.
+Seeded IDs are not sequential (for example employees are `1`, `51`, `101`), so list a resource first to find valid IDs:
+
+```bash
+curl http://localhost:8080/employees
+```
 
 ## Configuration
 
