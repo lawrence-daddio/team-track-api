@@ -2,7 +2,7 @@
 
 A Spring Boot REST API for managing teams, projects, and tasks.
 
-> **Work in progress.** Planned next: replace basic auth with JWT-based authentication and build a frontend.
+> **Work in progress.** Planned next: replace basic auth with JWT-based authentication, add role-based access control (RBAC), and build a frontend.
 
 ## Features
 
@@ -64,11 +64,11 @@ The H2 console is available at `http://localhost:8080/h2-console` (JDBC URL `jdb
 ## Security status
 
 The app is configured for HTTP basic auth, but all endpoints are currently open (`permitAll`) for development.
-The credentials in `application.properties` are dev-only placeholders. JWT authentication is planned.
+The credentials in `application.properties` are dev-only placeholders. Planned: JWT authentication, plus role-based access control (RBAC) so permissions depend on a user's team role (for example, `LEAD` vs. `MEMBER`).
 
 ## Roadmap
 
 - [ ] JWT authentication (replacing basic auth)
-- [ ] Lock down endpoints and add role-based access
+- [ ] Lock down endpoints and add role-based access control (RBAC) based on team roles
 - [ ] Frontend
 - [ ] Persistent database
