@@ -16,6 +16,7 @@ public class CommentDto {
     @NotNull
     private Long employeeId;
 
+    @NotNull
     private String body;
 
     private Instant createdAt;
