@@ -3,11 +3,15 @@ package com.lawrence.daddio.TeamTrack.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.List;
 
 @Data
-public class TeamDto {
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class TeamDto extends AuditableDto {
 
     private Long id;
 

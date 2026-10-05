@@ -1,11 +1,15 @@
 package com.lawrence.daddio.TeamTrack.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.util.List;
 
 @Data
-public class ProjectDto {
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class ProjectDto extends AuditableDto {
 
     private Long id;
 

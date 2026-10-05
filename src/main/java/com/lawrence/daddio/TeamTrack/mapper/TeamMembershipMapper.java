@@ -11,6 +11,8 @@ import java.util.List;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface TeamMembershipMapper {
 
+    @Mapping(target = "createdTs", ignore = true)
+    @Mapping(target = "updateTs", ignore = true)
     @Mapping(target = "employee", ignore = true)
     @Mapping(target = "team", ignore = true)
     TeamMembership TeamMembershipDtoToTeamMembership(TeamMembershipDto teamMembershipDto);

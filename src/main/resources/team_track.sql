@@ -30,7 +30,7 @@ INSERT INTO task(id, title, status, due_date, project_id, employee_id) VALUES
     (NEXT VALUE FOR task_seq, 'Migrate to SwiftUI',         'TODO',        '2026-11-15 17:00:00', (SELECT id FROM project WHERE name = 'iOS App Redesign'),    (SELECT id FROM employee WHERE email = 'bob.smith@example.com')),
     (NEXT VALUE FOR task_seq, 'Build sales fact table',     'TODO',        '2026-11-01 17:00:00', (SELECT id FROM project WHERE name = 'Reporting Warehouse'), (SELECT id FROM employee WHERE email = 'alice.johnson@example.com'));
 
-INSERT INTO comment(id, body, created_at, task_id, employee_id) VALUES
+INSERT INTO comment(id, body, created_ts, task_id, employee_id) VALUES
     (NEXT VALUE FOR comment_seq, 'Using a token bucket per client key.',      '2026-09-18 10:15:00+00', (SELECT id FROM task WHERE title = 'Set up rate limiting'),       (SELECT id FROM employee WHERE email = 'alice.johnson@example.com')),
     (NEXT VALUE FOR comment_seq, 'Should limits be configurable per route?',  '2026-09-18 14:02:00+00', (SELECT id FROM task WHERE title = 'Set up rate limiting'),       (SELECT id FROM employee WHERE email = 'bob.smith@example.com')),
     (NEXT VALUE FOR comment_seq, 'Build times dropped from 12 to 4 minutes.', '2026-09-20 09:30:00+00', (SELECT id FROM task WHERE title = 'Configure build caching'),    (SELECT id FROM employee WHERE email = 'bob.smith@example.com')),

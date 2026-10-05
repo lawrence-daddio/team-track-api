@@ -14,6 +14,8 @@ import java.util.List;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface EmployeeMapper {
 
+    @Mapping(target = "createdTs", ignore = true)
+    @Mapping(target = "updateTs", ignore = true)
     @Mapping(target = "tasks", ignore = true)
     @Mapping(target = "comments", ignore = true)
     @Mapping(target = "teamMemberships", ignore = true)

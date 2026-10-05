@@ -1,12 +1,16 @@
 package com.lawrence.daddio.TeamTrack.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class TaskDto {
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
+public class TaskDto extends AuditableDto {
 
     private Long id;
 

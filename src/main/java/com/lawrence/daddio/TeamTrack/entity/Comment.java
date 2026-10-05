@@ -7,17 +7,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.Instant;
-
-
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "comment")
-public class Comment {
+public class Comment extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -35,9 +32,6 @@ public class Comment {
 
     @Column(name = "body")
     private String body;
-
-    @Column(name = "created_at")
-    private Instant createdAt;
 
     @Override
     public boolean equals(Object o) {

@@ -2,23 +2,26 @@ package com.lawrence.daddio.TeamTrack.controller;
 
 import com.lawrence.daddio.TeamTrack.config.SecurityConfig;
 import com.lawrence.daddio.TeamTrack.dto.CommentDto;
+import com.lawrence.daddio.TeamTrack.dto.CommentUpdateDto;
 import com.lawrence.daddio.TeamTrack.service.CommentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -55,7 +58,8 @@ class CommentControllerTest {
 
     @Test
     void getComment_notFound() throws Exception {
-        when(service.getComment(99L)).thenReturn(null);
+        when(service.getComment(99L))
+                .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found: 99"));
 
         mockMvc.perform(get("/comments/99"))
                 .andExpect(status().isNotFound());
@@ -130,18 +134,43 @@ class CommentControllerTest {
     }
 
     @Test
-    void deleteComment() throws Exception {
-        when(service.deleteComment(4L)).thenReturn(true);
+    void updateComment() throws Exception {
+        when(service.updateComment(eq(5L), any(CommentUpdateDto.class))).thenReturn(comment(5L, "edited"));
 
-        mockMvc.perform(delete("/comments/4"))
-                .andExpect(status().isNoContent());
+        mockMvc.perform(put("/comments/5")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"body\":\"edited\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(5))
+                .andExpect(jsonPath("$.body").value("edited"));
     }
 
     @Test
-    void deleteComment_notFound() throws Exception {
-        when(service.deleteComment(99L)).thenReturn(false);
+    void updateComment_notFound() throws Exception {
+        when(service.updateComment(eq(99L), any(CommentUpdateDto.class)))
+                .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found: 99"));
 
-        mockMvc.perform(delete("/comments/99"))
+        mockMvc.perform(put("/comments/99")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"body\":\"edited\"}"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void updateComment_missingBodyIsRejected() throws Exception {
+        mockMvc.perform(put("/comments/5")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(service);
+    }
+
+    @Test
+    void deleteComment() throws Exception {
+        doNothing().when(service).deleteComment(anyLong());
+
+        mockMvc.perform(delete("/comments/4"))
+                .andExpect(status().isNoContent());
     }
 }

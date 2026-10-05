@@ -1,6 +1,7 @@
 package com.lawrence.daddio.TeamTrack.controller;
 
 import com.lawrence.daddio.TeamTrack.dto.CommentDto;
+import com.lawrence.daddio.TeamTrack.dto.CommentUpdateDto;
 import com.lawrence.daddio.TeamTrack.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -22,15 +23,10 @@ public class CommentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommentDto> getComment(@PathVariable("id") long id) {
+    public ResponseEntity<CommentDto> getComment(@PathVariable Long id) {
 
         log.info("Getting comment for id {}", id);
         CommentDto commentDto = service.getComment(id);
-
-        if (commentDto == null) {
-            log.debug("comment not found for id {}", id);
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
 
         return new ResponseEntity<>(commentDto, HttpStatus.OK);
     }
@@ -41,21 +37,21 @@ public class CommentController {
         log.info("Getting all comments");
         List<CommentDto> commentDtos = service.getComments();
 
-        if (commentDtos == null || commentDtos.isEmpty()) {
-            log.debug("comment not found");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (commentDtos.isEmpty()) {
+            log.debug("Comments not found");
+            return new ResponseEntity<>(commentDtos, HttpStatus.NOT_FOUND);
         }
 
         return new ResponseEntity<>(commentDtos, HttpStatus.OK);
     }
 
     @GetMapping("/task/{taskId}")
-    public ResponseEntity<List<CommentDto>> getCommentsByTask(@PathVariable("taskId") long taskId) {
+    public ResponseEntity<List<CommentDto>> getCommentsByTask(@PathVariable Long taskId) {
 
         log.info("Getting all comments for task {}", taskId);
         List<CommentDto> comments = service.getCommentsByTask(taskId);
 
-        if (comments == null || comments.isEmpty()) {
+        if (comments.isEmpty()) {
             log.debug("comments not found for task {}", taskId);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -72,19 +68,22 @@ public class CommentController {
         return new ResponseEntity<>(createdCommentDto, HttpStatus.CREATED);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<CommentDto> updateComment(@PathVariable Long id,
+                                                    @Valid @RequestBody CommentUpdateDto updateDto) {
+        log.info("Updating comment {}", id);
+        CommentDto updatedCommentDto = service.updateComment(id, updateDto);
+
+        return new ResponseEntity<>(updatedCommentDto, HttpStatus.OK);
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable("id") long id) {
+    public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
 
         log.info("Deleting comment for id {}", id);
-        boolean deleted = service.deleteComment(id);
-
-        if (!deleted) {
-            log.debug("Comment not found for id {}", id);
-            return ResponseEntity.notFound().build();
-        }
+        service.deleteComment(id);
 
         return ResponseEntity.noContent().build();
     }
-
 
 }

@@ -10,11 +10,11 @@ import lombok.ToString;
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "team_membership")
-public class TeamMembership {
+public class TeamMembership extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
