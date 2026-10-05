@@ -13,6 +13,8 @@ import java.util.List;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface TaskMapper {
 
+    @Mapping(target = "createdTs", ignore = true)
+    @Mapping(target = "updateTs", ignore = true)
     @Mapping(target = "project", ignore = true)
     @Mapping(target = "employee", ignore = true)
     @Mapping(target = "comments", ignore = true)

@@ -15,10 +15,11 @@ public interface CommentMapper {
     @Mapping(target = "employeeId", source = "employee.id")
     CommentDto commentToCommentDto(Comment comment);
 
+    @Mapping(target = "createdTs", ignore = true)
+    @Mapping(target = "updateTs", ignore = true)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "task", ignore = true)
     @Mapping(target = "employee", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
     Comment commentDtoToComment(CommentDto commentDto);
 
     List<CommentDto> commentsToCommentDtos(List<Comment> comment);

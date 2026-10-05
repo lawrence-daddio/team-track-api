@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.Instant;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -72,7 +71,6 @@ public class CommentService {
         comment.setEmployee(employeeRepository.findById(commentDto.getEmployeeId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Employee not found: " + commentDto.getEmployeeId())));
-        comment.setCreatedAt(Instant.now());
         Comment createdComment = repository.save(comment);
 
         return mapper.commentToCommentDto(createdComment);

@@ -13,11 +13,11 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "team")
-public class Team {
+public class Team extends Auditable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

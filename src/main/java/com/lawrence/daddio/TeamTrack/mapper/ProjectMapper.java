@@ -12,6 +12,8 @@ import java.util.List;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
 public interface ProjectMapper {
 
+    @Mapping(target = "createdTs", ignore = true)
+    @Mapping(target = "updateTs", ignore = true)
     @Mapping(target = "team", ignore = true)
     @Mapping(target = "tasks", ignore = true)
     Project projectDtoToProject(ProjectDto projectDto);
