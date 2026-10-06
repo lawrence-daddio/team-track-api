@@ -39,11 +39,11 @@ public class TeamMembershipService {
         return mapper.TeamMembershipToTeamMembershipDtoList(repository.findAll());
     }
 
-    public List<TeamMembershipDto> getTeamMembershipsByTeamId(long teamId) {
+    public List<TeamMembershipDto> getTeamMembershipsByTeamId(Long teamId) {
         return mapper.TeamMembershipToTeamMembershipDtoList(repository.findByTeamId(teamId));
     }
 
-    public List<TeamMembershipDto> getTeamMembershipsByEmployee(long employeeId) {
+    public List<TeamMembershipDto> getTeamMembershipsByEmployeeId(Long employeeId) {
         return mapper.TeamMembershipToTeamMembershipDtoList(repository.findByEmployeeId(employeeId));
     }
 

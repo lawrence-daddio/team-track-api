@@ -64,10 +64,10 @@ public class TeamMembershipController {
     }
 
     @GetMapping("/employee/{employeeId}")
-    public ResponseEntity<List<TeamMembershipDto>> getTeamMembershipsByEmployee(@PathVariable("employeeId") Long employeeId) {
+    public ResponseEntity<List<TeamMembershipDto>> getTeamMembershipsByEmployeeId(@PathVariable("employeeId") Long employeeId) {
 
         log.info("Getting all team memberships for employee {}", employeeId);
-        List<TeamMembershipDto> teamMembershipDtos = service.getTeamMembershipsByEmployee(employeeId);
+        List<TeamMembershipDto> teamMembershipDtos = service.getTeamMembershipsByEmployeeId(employeeId);
 
         if (teamMembershipDtos.isEmpty()) {
             log.debug("No team memberships found for employee {}", employeeId);

@@ -90,8 +90,8 @@ class TeamMembershipControllerTest {
     }
 
     @Test
-    void getTeamMembershipsByEmployeeById() throws Exception {
-        when(service.getTeamMembershipsByEmployee(3L)).thenReturn(List.of(membership(1L, "LEAD")));
+    void getTeamMembershipsByEmployeeByIdId() throws Exception {
+        when(service.getTeamMembershipsByEmployeeId(3L)).thenReturn(List.of(membership(1L, "LEAD")));
 
         mockMvc.perform(get("/team-memberships/employee/3"))
                 .andExpect(status().isOk())
