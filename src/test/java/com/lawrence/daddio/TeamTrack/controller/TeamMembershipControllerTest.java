@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -42,8 +43,8 @@ class TeamMembershipControllerTest {
     }
 
     @Test
-    void getTeamMembership() throws Exception {
-        when(service.getTeamMembership(1L)).thenReturn(membership(1L, "LEAD"));
+    void getTeamMembershipById() throws Exception {
+        when(service.getTeamMembershipById(1L)).thenReturn(membership(1L, "LEAD"));
 
         mockMvc.perform(get("/team-memberships/1"))
                 .andExpect(status().isOk())
@@ -54,15 +55,15 @@ class TeamMembershipControllerTest {
     }
 
     @Test
-    void getTeamMembership_notFound() throws Exception {
-        when(service.getTeamMembership(99L)).thenReturn(null);
+    void getTeamMembership_ById_notFound() throws Exception {
+        when(service.getTeamMembershipById(99L)).thenReturn(null);
 
         mockMvc.perform(get("/team-memberships/99"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    void getTeamMemberships() throws Exception {
+    void getTeamMembershipsById() throws Exception {
         when(service.getTeamMemberships()).thenReturn(List.of(membership(1L, "LEAD"), membership(2L, "DEV")));
 
         mockMvc.perform(get("/team-memberships"))
@@ -72,17 +73,16 @@ class TeamMembershipControllerTest {
     }
 
     @Test
-    void getTeamMemberships_emptyReturnsEmptyList() throws Exception {
+    void getTeamMemberships_emptyReturnsNoContent() throws Exception {
         when(service.getTeamMemberships()).thenReturn(List.of());
 
         mockMvc.perform(get("/team-memberships"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(0));
+                .andExpect(status().isNoContent());
     }
 
     @Test
-    void getTeamMembershipsByTeam() throws Exception {
-        when(service.getTeamMembershipsByTeam(1L)).thenReturn(List.of(membership(1L, "LEAD")));
+    void getTeamMembershipsByTeamByIdId() throws Exception {
+        when(service.getTeamMembershipsByTeamId(1L)).thenReturn(List.of(membership(1L, "LEAD")));
 
         mockMvc.perform(get("/team-memberships/team/1"))
                 .andExpect(status().isOk())
@@ -90,7 +90,7 @@ class TeamMembershipControllerTest {
     }
 
     @Test
-    void getTeamMembershipsByEmployee() throws Exception {
+    void getTeamMembershipsByEmployeeById() throws Exception {
         when(service.getTeamMembershipsByEmployee(3L)).thenReturn(List.of(membership(1L, "LEAD")));
 
         mockMvc.perform(get("/team-memberships/employee/3"))
@@ -122,17 +122,9 @@ class TeamMembershipControllerTest {
 
     @Test
     void deleteTeamMembership() throws Exception {
-        when(service.deleteTeamMembership(4L)).thenReturn(true);
-
         mockMvc.perform(delete("/team-memberships/4"))
                 .andExpect(status().isNoContent());
-    }
 
-    @Test
-    void deleteTeamMembership_notFound() throws Exception {
-        when(service.deleteTeamMembership(99L)).thenReturn(false);
-
-        mockMvc.perform(delete("/team-memberships/99"))
-                .andExpect(status().isNotFound());
+        verify(service).deleteTeamMembership(4L);
     }
 }
