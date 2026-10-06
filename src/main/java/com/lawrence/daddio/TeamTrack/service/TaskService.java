@@ -29,25 +29,21 @@ public class TaskService {
         this.mapper = mapper;
     }
 
-    @Transactional(readOnly = true)
-    public TaskDto getTask(long id) {
+    public TaskDto getTaskById(Long id) {
         return repository.findById(id)
                 .map(mapper::TaskToTaskDto)
                 .orElse(null);
     }
 
-    @Transactional(readOnly = true)
     public List<TaskDto> getTasks() {
         return mapper.TaskToTaskDtoList(repository.findAll());
     }
 
-    @Transactional(readOnly = true)
-    public List<TaskDto> getTasksByProject(long projectId) {
+    public List<TaskDto> getTasksByProjectId(Long projectId) {
         return mapper.TaskToTaskDtoList(repository.findByProjectId(projectId));
     }
 
-    @Transactional(readOnly = true)
-    public List<TaskDto> getTasksByEmployee(long employeeId) {
+    public List<TaskDto> getTasksByEmployeeId(Long employeeId) {
         return mapper.TaskToTaskDtoList(repository.findByEmployeeId(employeeId));
     }
 
@@ -74,11 +70,7 @@ public class TaskService {
         return mapper.TaskToTaskDto(repository.save(task));
     }
 
-    public boolean deleteTask(long id) {
-        if (!repository.existsById(id)) {
-            return false;
-        }
+    public void deleteTask(Long id) {
         repository.deleteById(id);
-        return true;
     }
 }

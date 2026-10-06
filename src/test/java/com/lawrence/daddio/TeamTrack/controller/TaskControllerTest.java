@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -43,8 +44,8 @@ class TaskControllerTest {
     }
 
     @Test
-    void getTask() throws Exception {
-        when(service.getTask(1L)).thenReturn(task(1L, "Write docs"));
+    void getTaskById() throws Exception {
+        when(service.getTaskById(1L)).thenReturn(task(1L, "Write docs"));
 
         mockMvc.perform(get("/tasks/1"))
                 .andExpect(status().isOk())
@@ -57,15 +58,15 @@ class TaskControllerTest {
     }
 
     @Test
-    void getTask_notFound() throws Exception {
-        when(service.getTask(99L)).thenReturn(null);
+    void getTask_ById_notFound() throws Exception {
+        when(service.getTaskById(99L)).thenReturn(null);
 
         mockMvc.perform(get("/tasks/99"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    void getTasks() throws Exception {
+    void getTasksById() throws Exception {
         when(service.getTasks()).thenReturn(List.of(task(1L, "a"), task(2L, "b")));
 
         mockMvc.perform(get("/tasks"))
@@ -75,17 +76,16 @@ class TaskControllerTest {
     }
 
     @Test
-    void getTasks_emptyReturnsEmptyList() throws Exception {
+    void getTasks_emptyReturnsNotFound() throws Exception {
         when(service.getTasks()).thenReturn(List.of());
 
         mockMvc.perform(get("/tasks"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(0));
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    void getTasksByProject() throws Exception {
-        when(service.getTasksByProject(1L)).thenReturn(List.of(task(1L, "a")));
+    void getTasksByProjectByIdId() throws Exception {
+        when(service.getTasksByProjectId(1L)).thenReturn(List.of(task(1L, "a")));
 
         mockMvc.perform(get("/tasks/project/1"))
                 .andExpect(status().isOk())
@@ -93,8 +93,8 @@ class TaskControllerTest {
     }
 
     @Test
-    void getTasksByEmployee() throws Exception {
-        when(service.getTasksByEmployee(3L)).thenReturn(List.of(task(1L, "a")));
+    void getTasksByEmployeeByIdId() throws Exception {
+        when(service.getTasksByEmployeeId(3L)).thenReturn(List.of(task(1L, "a")));
 
         mockMvc.perform(get("/tasks/employee/3"))
                 .andExpect(status().isOk())
@@ -116,17 +116,9 @@ class TaskControllerTest {
 
     @Test
     void deleteTask() throws Exception {
-        when(service.deleteTask(4L)).thenReturn(true);
-
         mockMvc.perform(delete("/tasks/4"))
                 .andExpect(status().isNoContent());
-    }
 
-    @Test
-    void deleteTask_notFound() throws Exception {
-        when(service.deleteTask(99L)).thenReturn(false);
-
-        mockMvc.perform(delete("/tasks/99"))
-                .andExpect(status().isNotFound());
+        verify(service).deleteTask(4L);
     }
 }

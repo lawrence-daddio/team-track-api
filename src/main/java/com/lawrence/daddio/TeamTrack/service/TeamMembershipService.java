@@ -29,25 +29,21 @@ public class TeamMembershipService {
         this.mapper = mapper;
     }
 
-    @Transactional(readOnly = true)
-    public TeamMembershipDto getTeamMembership(long id) {
+    public TeamMembershipDto getTeamMembershipById(Long id) {
         return repository.findById(id)
                 .map(mapper::TeamMembershipToTeamMembershipDto)
                 .orElse(null);
     }
 
-    @Transactional(readOnly = true)
     public List<TeamMembershipDto> getTeamMemberships() {
         return mapper.TeamMembershipToTeamMembershipDtoList(repository.findAll());
     }
 
-    @Transactional(readOnly = true)
-    public List<TeamMembershipDto> getTeamMembershipsByTeam(long teamId) {
+    public List<TeamMembershipDto> getTeamMembershipsByTeamId(Long teamId) {
         return mapper.TeamMembershipToTeamMembershipDtoList(repository.findByTeamId(teamId));
     }
 
-    @Transactional(readOnly = true)
-    public List<TeamMembershipDto> getTeamMembershipsByEmployee(long employeeId) {
+    public List<TeamMembershipDto> getTeamMembershipsByEmployeeId(Long employeeId) {
         return mapper.TeamMembershipToTeamMembershipDtoList(repository.findByEmployeeId(employeeId));
     }
 
@@ -69,11 +65,7 @@ public class TeamMembershipService {
         return mapper.TeamMembershipToTeamMembershipDto(repository.save(teamMembership));
     }
 
-    public boolean deleteTeamMembership(long id) {
-        if (!repository.existsById(id)) {
-            return false;
-        }
+    public void deleteTeamMembership(Long id) {
         repository.deleteById(id);
-        return true;
     }
 }

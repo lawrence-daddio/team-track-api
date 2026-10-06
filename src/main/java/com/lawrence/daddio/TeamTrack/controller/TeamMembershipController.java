@@ -3,6 +3,7 @@ package com.lawrence.daddio.TeamTrack.controller;
 import com.lawrence.daddio.TeamTrack.dto.TeamMembershipDto;
 import com.lawrence.daddio.TeamTrack.service.TeamMembershipService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/team-memberships")
+@Slf4j
 public class TeamMembershipController {
 
     private TeamMembershipService service;
@@ -20,58 +22,74 @@ public class TeamMembershipController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TeamMembershipDto> getTeamMembership(@PathVariable("id") long id) {
+    public ResponseEntity<TeamMembershipDto> getTeamMembershipById(@PathVariable("id") Long id) {
 
-        TeamMembershipDto teamMembership = service.getTeamMembership(id);
+        log.info("Getting team membership by id {}", id);
+        TeamMembershipDto teamMembershipDto = service.getTeamMembershipById(id);
 
-        if (teamMembership == null) {
+        if (teamMembershipDto == null) {
+            log.debug("No team membership found with id {}", id);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(teamMembership, HttpStatus.OK);
+        return new ResponseEntity<>(teamMembershipDto, HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<List<TeamMembershipDto>> getTeamMemberships() {
 
-        List<TeamMembershipDto> teamMemberships = service.getTeamMemberships();
+        log.info("Getting all team memberships");
+        List<TeamMembershipDto> teamMembershipDtos = service.getTeamMemberships();
 
-        return new ResponseEntity<>(teamMemberships, HttpStatus.OK);
+        if (teamMembershipDtos.isEmpty()) {
+            log.debug("No team memberships found");
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(teamMembershipDtos, HttpStatus.OK);
     }
 
     @GetMapping("/team/{teamId}")
-    public ResponseEntity<List<TeamMembershipDto>> getTeamMembershipsByTeam(@PathVariable("teamId") long teamId) {
+    public ResponseEntity<List<TeamMembershipDto>> getTeamMembershipsByTeamId(@PathVariable("teamId") Long teamId) {
 
-        List<TeamMembershipDto> teamMemberships = service.getTeamMembershipsByTeam(teamId);
+        log.info("Getting all team memberships for team {}", teamId);
+        List<TeamMembershipDto> teamMembershipDtos = service.getTeamMembershipsByTeamId(teamId);
 
-        return new ResponseEntity<>(teamMemberships, HttpStatus.OK);
+        if (teamMembershipDtos.isEmpty()) {
+            log.debug("No team memberships found for team {}", teamId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(teamMembershipDtos, HttpStatus.OK);
     }
 
     @GetMapping("/employee/{employeeId}")
-    public ResponseEntity<List<TeamMembershipDto>> getTeamMembershipsByEmployee(@PathVariable("employeeId") long employeeId) {
+    public ResponseEntity<List<TeamMembershipDto>> getTeamMembershipsByEmployeeId(@PathVariable("employeeId") Long employeeId) {
 
-        List<TeamMembershipDto> teamMemberships = service.getTeamMembershipsByEmployee(employeeId);
+        log.info("Getting all team memberships for employee {}", employeeId);
+        List<TeamMembershipDto> teamMembershipDtos = service.getTeamMembershipsByEmployeeId(employeeId);
 
-        return new ResponseEntity<>(teamMemberships, HttpStatus.OK);
+        if (teamMembershipDtos.isEmpty()) {
+            log.debug("No team memberships found for employee {}", employeeId);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+
+        return new ResponseEntity<>(teamMembershipDtos, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<TeamMembershipDto> createTeamMembership(@Valid @RequestBody TeamMembershipDto teamMembershipDto) {
 
+        log.info("Creating team membership {}", teamMembershipDto);
         TeamMembershipDto createdTeamMembership = service.createTeamMembership(teamMembershipDto);
 
         return new ResponseEntity<>(createdTeamMembership, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTeamMembership(@PathVariable("id") long id) {
-
-        boolean deleted = service.deleteTeamMembership(id);
-
-        if (!deleted) {
-            return ResponseEntity.notFound().build();
-        }
-
+    public ResponseEntity<Void> deleteTeamMembership(@PathVariable("id") Long id) {
+        log.info("Deleting team membership with id {}", id);
+        service.deleteTeamMembership(id);
         return ResponseEntity.noContent().build();
     }
 

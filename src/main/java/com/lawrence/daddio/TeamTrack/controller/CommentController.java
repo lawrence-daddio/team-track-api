@@ -23,10 +23,15 @@ public class CommentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommentDto> getComment(@PathVariable Long id) {
+    public ResponseEntity<CommentDto> getCommentById(@PathVariable Long id) {
 
         log.info("Getting comment for id {}", id);
-        CommentDto commentDto = service.getComment(id);
+        CommentDto commentDto = service.getCommentById(id);
+
+        if (commentDto == null) {
+            log.debug("Comment not found for id {}", id);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
 
         return new ResponseEntity<>(commentDto, HttpStatus.OK);
     }
@@ -71,7 +76,7 @@ public class CommentController {
     @PutMapping("/{id}")
     public ResponseEntity<CommentDto> updateComment(@PathVariable Long id,
                                                     @Valid @RequestBody CommentUpdateDto updateDto) {
-        log.info("Updating comment {}", id);
+        log.info("Updating comment for id: {}", id);
         CommentDto updatedCommentDto = service.updateComment(id, updateDto);
 
         return new ResponseEntity<>(updatedCommentDto, HttpStatus.OK);

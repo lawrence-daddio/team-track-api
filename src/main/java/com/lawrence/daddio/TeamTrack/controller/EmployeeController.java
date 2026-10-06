@@ -52,6 +52,7 @@ public class EmployeeController {
     @PostMapping
     public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeDto employee) {
 
+        log.info("creating employee {}", employee);
         EmployeeDto createdEmployeeDto = service.createEmployee(employee);
 
         return new ResponseEntity<>(createdEmployeeDto, HttpStatus.CREATED);
@@ -60,6 +61,7 @@ public class EmployeeController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteEmployee(@PathVariable("id") long id) {
 
+        log.info("deleting employee with id {}", id);
         boolean deleted = service.deleteEmployee(id);
 
         if (!deleted) {

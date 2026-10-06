@@ -32,11 +32,8 @@ public class CommentService {
         this.employeeRepository = employeeRepository;
     }
 
-    public CommentDto getComment(Long id) {
-        Comment comment = repository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Comment not found: " + id));
-
+    public CommentDto getCommentById(Long id) {
+        Comment comment = repository.findById(id).orElse(null);
         return mapper.commentToCommentDto(comment);
     }
 

@@ -23,18 +23,14 @@ public class TeamService {
         this.mapper = mapper;
     }
 
-    @Transactional(readOnly = true)
-    public TeamDto getTeam(String name) {
-        Team team = repository.findByName(name)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                        "Team not found: " + name));
-
+    public TeamDto getTeamName(String name) {
+        Team team = repository.findByName(name).orElse(null);
         return mapper.teamToTeamDto(team);
     }
 
-    @Transactional(readOnly = true)
     public List<TeamDto> getTeams() {
-        return mapper.teamsToTeamDtos(repository.findAll());
+        List<Team> teams = repository.findAll();
+        return mapper.teamsToTeamDtos(teams);
     }
 
     @Transactional
@@ -50,7 +46,7 @@ public class TeamService {
     }
 
     @Transactional
-    public TeamDto updateTeam(TeamDto teamDto, long id) {
+    public TeamDto updateTeam(TeamDto teamDto, Long id) {
         Team team = repository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Team not found for id: " + id));
@@ -70,7 +66,7 @@ public class TeamService {
     }
 
     @Transactional
-    public void deleteTeam(long id) {
+    public void deleteTeam(Long id) {
         if (!repository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Team not found for id: " + id);
         }

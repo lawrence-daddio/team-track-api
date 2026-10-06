@@ -3,6 +3,7 @@ package com.lawrence.daddio.TeamTrack.controller;
 import com.lawrence.daddio.TeamTrack.dto.TaskDto;
 import com.lawrence.daddio.TeamTrack.service.TaskService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/tasks")
+@Slf4j
 public class TaskController {
 
     private TaskService service;
@@ -20,58 +22,74 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TaskDto> getTask(@PathVariable("id") long id) {
+    public ResponseEntity<TaskDto> getTaskById(@PathVariable Long id) {
 
-        TaskDto task = service.getTask(id);
+        log.info("Getting task by id {}", id);
+        TaskDto taskDto = service.getTaskById(id);
 
-        if (task == null) {
+        if (taskDto == null) {
+            log.debug("No task found with id {}", id);
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        return new ResponseEntity<>(task, HttpStatus.OK);
+        return new ResponseEntity<>(taskDto, HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<List<TaskDto>> getTasks() {
 
-        List<TaskDto> tasks = service.getTasks();
+        log.info("Getting all tasks");
+        List<TaskDto> taskDtos = service.getTasks();
 
-        return new ResponseEntity<>(tasks, HttpStatus.OK);
+        if (taskDtos.isEmpty()) {
+            log.debug("No tasks found");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(taskDtos, HttpStatus.OK);
     }
 
     @GetMapping("/project/{projectId}")
-    public ResponseEntity<List<TaskDto>> getTasksByProject(@PathVariable("projectId") long projectId) {
+    public ResponseEntity<List<TaskDto>> getTasksByProjectId(@PathVariable("projectId") Long projectId) {
 
-        List<TaskDto> tasks = service.getTasksByProject(projectId);
+        log.info("Getting all tasks for project {}", projectId);
+        List<TaskDto> taskDtos = service.getTasksByProjectId(projectId);
 
-        return new ResponseEntity<>(tasks, HttpStatus.OK);
+        if (taskDtos.isEmpty()) {
+            log.debug("No tasks found for project {}", projectId);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(taskDtos, HttpStatus.OK);
     }
 
     @GetMapping("/employee/{employeeId}")
-    public ResponseEntity<List<TaskDto>> getTasksByEmployee(@PathVariable("employeeId") long employeeId) {
+    public ResponseEntity<List<TaskDto>> getTasksByEmployeeId(@PathVariable("employeeId") Long employeeId) {
 
-        List<TaskDto> tasks = service.getTasksByEmployee(employeeId);
+        log.info("Getting all tasks for employee {}", employeeId);
+        List<TaskDto> taskDtos = service.getTasksByEmployeeId(employeeId);
 
-        return new ResponseEntity<>(tasks, HttpStatus.OK);
+        if (taskDtos.isEmpty()) {
+            log.debug("No tasks found for employee {}", employeeId);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<>(taskDtos, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<TaskDto> createTask(@Valid @RequestBody TaskDto taskDto) {
 
-        TaskDto createdTask = service.createTask(taskDto);
+        log.info("Creating task {}", taskDto);
+        TaskDto createdTaskDto = service.createTask(taskDto);
 
-        return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
+        return new ResponseEntity<>(createdTaskDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTask(@PathVariable("id") long id) {
-
-        boolean deleted = service.deleteTask(id);
-
-        if (!deleted) {
-            return ResponseEntity.notFound().build();
-        }
-
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        log.info("Deleting task with id {}", id);
+        service.deleteTask(id);
         return ResponseEntity.noContent().build();
     }
 
