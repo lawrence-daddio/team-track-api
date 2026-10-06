@@ -29,24 +29,20 @@ public class TeamMembershipService {
         this.mapper = mapper;
     }
 
-    @Transactional(readOnly = true)
     public TeamMembershipDto getTeamMembership(long id) {
         return repository.findById(id)
                 .map(mapper::TeamMembershipToTeamMembershipDto)
                 .orElse(null);
     }
 
-    @Transactional(readOnly = true)
     public List<TeamMembershipDto> getTeamMemberships() {
         return mapper.TeamMembershipToTeamMembershipDtoList(repository.findAll());
     }
 
-    @Transactional(readOnly = true)
     public List<TeamMembershipDto> getTeamMembershipsByTeam(long teamId) {
         return mapper.TeamMembershipToTeamMembershipDtoList(repository.findByTeamId(teamId));
     }
 
-    @Transactional(readOnly = true)
     public List<TeamMembershipDto> getTeamMembershipsByEmployee(long employeeId) {
         return mapper.TeamMembershipToTeamMembershipDtoList(repository.findByEmployeeId(employeeId));
     }

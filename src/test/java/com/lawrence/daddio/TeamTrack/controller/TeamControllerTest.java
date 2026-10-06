@@ -49,8 +49,8 @@ class TeamControllerTest {
     }
 
     @Test
-    void getTeam() throws Exception {
-        when(service.getTeam("Alpha")).thenReturn(team(1L, "Alpha"));
+    void getTeamByName() throws Exception {
+        when(service.getTeamName("Alpha")).thenReturn(team(1L, "Alpha"));
 
         mockMvc.perform(get("/teams/Alpha"))
                 .andExpect(status().isOk())
@@ -61,8 +61,8 @@ class TeamControllerTest {
     }
 
     @Test
-    void getTeam_notFound() throws Exception {
-        when(service.getTeam("Missing"))
+    void getTeam_ByName_notFound() throws Exception {
+        when(service.getTeamName("Missing"))
                 .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Team not found: Missing"));
 
         mockMvc.perform(get("/teams/Missing"))
@@ -70,7 +70,7 @@ class TeamControllerTest {
     }
 
     @Test
-    void getTeams() throws Exception {
+    void getTeamsByName() throws Exception {
         when(service.getTeams()).thenReturn(List.of(team(1L, "Alpha"), team(2L, "Beta")));
 
         mockMvc.perform(get("/teams"))

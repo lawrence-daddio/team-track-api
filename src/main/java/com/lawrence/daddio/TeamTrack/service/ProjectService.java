@@ -31,20 +31,17 @@ public class ProjectService {
         this.mapper = mapper;
     }
 
-    @Transactional(readOnly = true)
-    public ProjectDto getProject(long id) {
+    public ProjectDto getProjectById(Long id) {
         return projectRepository.findById(id)
                 .map(mapper::projectToProjectDto)
                 .orElse(null);
     }
 
-    @Transactional(readOnly = true)
-    public List<ProjectDto> getProjects() {
+    public List<ProjectDto> getAllProjects() {
         return mapper.projectsToProjectDtos(projectRepository.findAll());
     }
 
-    @Transactional(readOnly = true)
-    public List<ProjectDto> getProjectsByTeam(long teamId) {
+    public List<ProjectDto> getProjectsByTeam(Long teamId) {
         return mapper.projectsToProjectDtos(projectRepository.findByTeamId(teamId));
     }
 
@@ -76,11 +73,11 @@ public class ProjectService {
         return mapper.projectToProjectDto(projectRepository.save(newProject));
     }
 
-    public boolean deleteProject(long id) {
+    @Transactional
+    public void deleteProject(Long id) {
         if (!projectRepository.existsById(id)) {
-            return false;
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found for id: " + id);
         }
         projectRepository.deleteById(id);
-        return true;
     }
 }

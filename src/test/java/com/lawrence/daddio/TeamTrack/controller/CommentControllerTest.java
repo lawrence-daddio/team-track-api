@@ -45,8 +45,8 @@ class CommentControllerTest {
     }
 
     @Test
-    void getComment() throws Exception {
-        when(service.getComment(1L)).thenReturn(comment(1L, "hello"));
+    void getCommentById() throws Exception {
+        when(service.getCommentById(1L)).thenReturn(comment(1L, "hello"));
 
         mockMvc.perform(get("/comments/1"))
                 .andExpect(status().isOk())
@@ -57,8 +57,8 @@ class CommentControllerTest {
     }
 
     @Test
-    void getComment_notFound() throws Exception {
-        when(service.getComment(99L))
+    void getComment_ById_notFound() throws Exception {
+        when(service.getCommentById(99L))
                 .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment not found: 99"));
 
         mockMvc.perform(get("/comments/99"))
@@ -66,7 +66,15 @@ class CommentControllerTest {
     }
 
     @Test
-    void getComments() throws Exception {
+    void getComment_ById_nullReturnsNotFound() throws Exception {
+        when(service.getCommentById(99L)).thenReturn(null);
+
+        mockMvc.perform(get("/comments/99"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void getCommentsById() throws Exception {
         when(service.getComments()).thenReturn(List.of(comment(1L, "a"), comment(2L, "b")));
 
         mockMvc.perform(get("/comments"))
@@ -76,7 +84,7 @@ class CommentControllerTest {
     }
 
     @Test
-    void getComments_emptyReturnsNotFound() throws Exception {
+    void getComments_emptyReturnsNotFoundById() throws Exception {
         when(service.getComments()).thenReturn(List.of());
 
         mockMvc.perform(get("/comments"))
@@ -84,7 +92,7 @@ class CommentControllerTest {
     }
 
     @Test
-    void getCommentsByTask() throws Exception {
+    void getCommentsByTaskById() throws Exception {
         when(service.getCommentsByTask(7L)).thenReturn(List.of(comment(1L, "a")));
 
         mockMvc.perform(get("/comments/task/7"))
@@ -94,7 +102,7 @@ class CommentControllerTest {
 
 
     @Test
-    void getCommentsByTask_noneReturnsNotFound() throws Exception {
+    void getCommentsByTask_noneReturnsNotFoundById() throws Exception {
         when(service.getCommentsByTask(8L)).thenReturn(List.of());
 
         mockMvc.perform(get("/comments/task/8"))

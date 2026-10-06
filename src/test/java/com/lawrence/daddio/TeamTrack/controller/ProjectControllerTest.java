@@ -7,13 +7,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -42,8 +46,8 @@ class ProjectControllerTest {
     }
 
     @Test
-    void getProject() throws Exception {
-        when(service.getProject(1L)).thenReturn(project(1L, "Apollo"));
+    void getProjectById() throws Exception {
+        when(service.getProjectById(1L)).thenReturn(project(1L, "Apollo"));
 
         mockMvc.perform(get("/projects/1"))
                 .andExpect(status().isOk())
@@ -54,16 +58,16 @@ class ProjectControllerTest {
     }
 
     @Test
-    void getProject_notFound() throws Exception {
-        when(service.getProject(99L)).thenReturn(null);
+    void getProject_ById_notFound() throws Exception {
+        when(service.getProjectById(99L)).thenReturn(null);
 
         mockMvc.perform(get("/projects/99"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
-    void getProjects() throws Exception {
-        when(service.getProjects()).thenReturn(List.of(project(1L, "Apollo"), project(2L, "Gemini")));
+    void getAllProjectsById() throws Exception {
+        when(service.getAllProjects()).thenReturn(List.of(project(1L, "Apollo"), project(2L, "Gemini")));
 
         mockMvc.perform(get("/projects"))
                 .andExpect(status().isOk())
@@ -72,16 +76,15 @@ class ProjectControllerTest {
     }
 
     @Test
-    void getProjects_emptyReturnsEmptyList() throws Exception {
-        when(service.getProjects()).thenReturn(List.of());
+    void getAllProjects_emptyReturnsNotFound() throws Exception {
+        when(service.getAllProjects()).thenReturn(List.of());
 
         mockMvc.perform(get("/projects"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(0));
+                .andExpect(status().isNotFound());
     }
 
     @Test
-    void getProjectsByTeam() throws Exception {
+    void getAllProjectsByTeamById() throws Exception {
         when(service.getProjectsByTeam(1L)).thenReturn(List.of(project(1L, "Apollo")));
 
         mockMvc.perform(get("/projects/team/1"))
@@ -104,7 +107,7 @@ class ProjectControllerTest {
 
     @Test
     void deleteProject() throws Exception {
-        when(service.deleteProject(4L)).thenReturn(true);
+        doNothing().when(service).deleteProject(99L);
 
         mockMvc.perform(delete("/projects/4"))
                 .andExpect(status().isNoContent());
@@ -112,9 +115,11 @@ class ProjectControllerTest {
 
     @Test
     void deleteProject_notFound() throws Exception {
-        when(service.deleteProject(99L)).thenReturn(false);
+        doThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found for id: 99"))
+                .when(service).deleteProject(99L);
 
         mockMvc.perform(delete("/projects/99"))
                 .andExpect(status().isNotFound());
     }
+
 }
