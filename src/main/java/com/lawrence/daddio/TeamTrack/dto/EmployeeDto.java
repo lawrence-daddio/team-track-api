@@ -1,5 +1,6 @@
 package com.lawrence.daddio.TeamTrack.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -20,6 +21,7 @@ public class EmployeeDto extends AuditableDto {
     private String email;
 
     @ToString.Exclude
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @NotBlank
