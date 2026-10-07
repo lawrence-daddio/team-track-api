@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -94,17 +95,8 @@ class EmployeeControllerTest {
 
     @Test
     void deleteEmployee() throws Exception {
-        when(service.deleteEmployee(4L)).thenReturn(true);
-
+        doNothing().when(service).deleteEmployee(4L);
         mockMvc.perform(delete("/employees/4"))
                 .andExpect(status().isNoContent());
-    }
-
-    @Test
-    void deleteEmployee_notFound() throws Exception {
-        when(service.deleteEmployee(99L)).thenReturn(false);
-
-        mockMvc.perform(delete("/employees/99"))
-                .andExpect(status().isNotFound());
     }
 }

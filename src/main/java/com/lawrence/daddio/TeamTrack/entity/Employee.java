@@ -2,6 +2,8 @@ package com.lawrence.daddio.TeamTrack.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -20,6 +22,8 @@ public class Employee extends Auditable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @NotBlank
+    @Email
     @Column(name = "email",  nullable = false)
     private String email;
 
@@ -28,7 +32,8 @@ public class Employee extends Auditable {
     @Column(name = "password_hash")
     private String passwordHash;
 
-    @Column(name = "display_name")
+    @NotBlank
+    @Column(name = "display_name", nullable = false)
     private String displayName;
 
     @ToString.Exclude

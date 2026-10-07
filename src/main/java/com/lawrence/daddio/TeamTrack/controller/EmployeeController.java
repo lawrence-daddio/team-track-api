@@ -1,8 +1,10 @@
 package com.lawrence.daddio.TeamTrack.controller;
 
 import com.lawrence.daddio.TeamTrack.dto.EmployeeDto;
+import com.lawrence.daddio.TeamTrack.dto.EmployeeUpdateDto;
 import com.lawrence.daddio.TeamTrack.entity.Employee;
 import com.lawrence.daddio.TeamTrack.service.EmployeeService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,24 +52,27 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<EmployeeDto> createEmployee(@RequestBody EmployeeDto employee) {
+    public ResponseEntity<EmployeeDto> createEmployee(@Valid @RequestBody EmployeeDto employeeDto) {
 
-        log.info("creating employee {}", employee);
-        EmployeeDto createdEmployeeDto = service.createEmployee(employee);
+        log.info("creating employee {}", employeeDto);
+        EmployeeDto createdEmployeeDto = service.createEmployee(employeeDto);
 
         return new ResponseEntity<>(createdEmployeeDto, HttpStatus.CREATED);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<EmployeeDto> updateEmployee(@PathVariable Long id, @Valid @RequestBody EmployeeUpdateDto employeeUpdateDto) {
+
+        log.info("updating employee {}", employeeUpdateDto);
+        EmployeeDto updateEmployeeDto = service.updateEmployee(id, employeeUpdateDto);
+        return new ResponseEntity<>(updateEmployeeDto, HttpStatus.OK);
+    }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEmployee(@PathVariable("id") long id) {
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
 
         log.info("deleting employee with id {}", id);
-        boolean deleted = service.deleteEmployee(id);
-
-        if (!deleted) {
-            return ResponseEntity.notFound().build();
-        }
-
+        service.deleteEmployee(id);
         return ResponseEntity.noContent().build();
     }
 

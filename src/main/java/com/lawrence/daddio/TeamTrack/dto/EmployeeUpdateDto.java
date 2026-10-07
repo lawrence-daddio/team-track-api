@@ -3,17 +3,10 @@ package com.lawrence.daddio.TeamTrack.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
-import java.util.List;
-
 @Data
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-public class EmployeeDto extends AuditableDto {
-
-    private Long id;
+public class EmployeeUpdateDto {
 
     @NotBlank
     @Email
@@ -24,11 +17,5 @@ public class EmployeeDto extends AuditableDto {
 
     @NotBlank
     private String displayName;
-
-    private List<Long> taskIds;
-
-    private List<Long> teamMembershipIds;
-
-    private List<Long> commentIds;
 
 }

@@ -1,15 +1,20 @@
 package com.lawrence.daddio.TeamTrack.service;
 
 import com.lawrence.daddio.TeamTrack.dto.EmployeeDto;
+import com.lawrence.daddio.TeamTrack.dto.EmployeeUpdateDto;
 import com.lawrence.daddio.TeamTrack.entity.Employee;
-import com.lawrence.daddio.TeamTrack.entity.TeamMembership;
 import com.lawrence.daddio.TeamTrack.mapper.EmployeeMapper;
-import com.lawrence.daddio.TeamTrack.repo.*;
+import com.lawrence.daddio.TeamTrack.repo.CommentRepository;
+import com.lawrence.daddio.TeamTrack.repo.EmployeeRepository;
+import com.lawrence.daddio.TeamTrack.repo.TaskRepository;
+import com.lawrence.daddio.TeamTrack.repo.TeamMembershipRepository;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,24 +22,19 @@ import java.util.Optional;
 public class EmployeeService {
 
     private EmployeeRepository employeeRepository;
-    private TaskRepository taskRepository;
-    private CommentRepository commentRepository;
-    private TeamMembershipRepository teamMembershipRepository;
     private EmployeeMapper mapper;
+    private PasswordEncoder passwordEncoder;
 
-    public EmployeeService(EmployeeRepository employeeRepository, TaskRepository taskRepository, CommentRepository commentRepository,
-                           TeamMembershipRepository teamMembershipRepository, EmployeeMapper mapper) {
+    public EmployeeService(EmployeeRepository employeeRepository, EmployeeMapper mapper,  PasswordEncoder passwordEncoder) {
         this.employeeRepository = employeeRepository;
-        this.taskRepository = taskRepository;
-        this.commentRepository = commentRepository;
-        this.teamMembershipRepository = teamMembershipRepository;
         this.mapper = mapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public EmployeeDto getEmployees(String email) {
         Optional<Employee> employee = employeeRepository.findByEmail(email);
 
-        if (employee.isPresent()) {
+        if (employee.isPresent()){
             return mapper.employeeToEmployeeDto(employee.get());
         }
         return null;
@@ -43,28 +43,42 @@ public class EmployeeService {
     public List<EmployeeDto> getEmployees() {
         List<Employee> employees  = employeeRepository.findAll();
 
-        if (employees != null && !employees.isEmpty()){
+        if (!employees.isEmpty()){
             return mapper.employeeToEmployeeDtos(employees);
         }
-
-        return null;
+        return Collections.emptyList();
     }
 
     public EmployeeDto createEmployee(@RequestBody EmployeeDto employeeDto) {
-
+        employeeDto.setId(null); //let db handle it
         Employee newEmployee = mapper.employeeDtoToEmployee(employeeDto);
-        newEmployee.setComments(commentRepository.findAll());
-        newEmployee.setTasks(taskRepository.findAll());
-        newEmployee.setTeamMemberships(teamMembershipRepository.findAll());
+
+        if (employeeDto.getPassword() != null && !employeeDto.getPassword().isBlank()) {
+            newEmployee.setPasswordHash(passwordEncoder.encode(employeeDto.getPassword()));
+        }else{
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password cannot be empty or null");
+        }
+
         Employee createdEmployee = employeeRepository.save(newEmployee);
         return mapper.employeeToEmployeeDto(createdEmployee);
     }
 
-    public boolean deleteEmployee(long id) {
-        if (!employeeRepository.existsById(id)) {
-            return false;
+
+    public EmployeeDto updateEmployee(Long id, EmployeeUpdateDto employeeUpdateDto) {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        employee.setEmail(employeeUpdateDto.getEmail());
+        employee.setDisplayName(employeeUpdateDto.getDisplayName());
+
+        if (employeeUpdateDto.getPassword() != null && !employeeUpdateDto.getPassword().isBlank()) {
+            employee.setPasswordHash(passwordEncoder.encode(employeeUpdateDto.getPassword()));
         }
-        employeeRepository.deleteById(id);
-        return true;
+
+        return mapper.employeeToEmployeeDto(employeeRepository.save(employee));
     }
+
+    public void deleteEmployee(Long id) {
+        employeeRepository.deleteById(id);
+    }
+
 }
