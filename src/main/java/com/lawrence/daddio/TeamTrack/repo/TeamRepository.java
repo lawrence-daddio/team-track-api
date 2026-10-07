@@ -1,6 +1,5 @@
 package com.lawrence.daddio.TeamTrack.repo;
 
-import com.lawrence.daddio.TeamTrack.entity.Employee;
 import com.lawrence.daddio.TeamTrack.entity.Team;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
