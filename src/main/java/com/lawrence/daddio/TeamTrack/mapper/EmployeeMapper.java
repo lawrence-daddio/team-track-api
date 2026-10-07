@@ -25,6 +25,7 @@ public interface EmployeeMapper {
     @Mapping(target = "taskIds", source = "tasks")
     @Mapping(target = "commentIds", source = "comments")
     @Mapping(target = "teamMembershipIds", source = "teamMemberships")
+    @Mapping(target = "password",  ignore = true)
     EmployeeDto employeeToEmployeeDto(Employee employee);
 
     List<EmployeeDto> employeeToEmployeeDtos(List<Employee> employees);
