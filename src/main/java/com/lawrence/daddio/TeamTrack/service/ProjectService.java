@@ -1,6 +1,7 @@
 package com.lawrence.daddio.TeamTrack.service;
 
 import com.lawrence.daddio.TeamTrack.dto.ProjectDto;
+import com.lawrence.daddio.TeamTrack.dto.update.ProjectUpdateDto;
 import com.lawrence.daddio.TeamTrack.entity.Project;
 import com.lawrence.daddio.TeamTrack.entity.Task;
 import com.lawrence.daddio.TeamTrack.mapper.ProjectMapper;
@@ -71,6 +72,27 @@ public class ProjectService {
         }
 
         return mapper.projectToProjectDto(projectRepository.save(newProject));
+    }
+
+    @Transactional
+    public ProjectDto updateProject(Long id, ProjectUpdateDto projectUpdateDto) {
+        Project project = projectRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found for id: " + id));
+        project.setName(projectUpdateDto.getName());
+        project.setDescription(projectUpdateDto.getDescription());
+
+        //If id for team assigned to project changes set it to the new team
+        Long newTeamId = projectUpdateDto.getTeamId();
+        if (newTeamId != null) {
+            Long currentTeamId = project.getTeam() != null ? project.getTeam().getId() : null;
+            if (!newTeamId.equals(currentTeamId)) {
+                project.setTeam(teamRepository.findById(newTeamId).orElseThrow(
+                        () -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                                "Team being assigned to the project not found: " + newTeamId)));
+            }
+        }
+
+        return mapper.projectToProjectDto(projectRepository.save(project));
     }
 
     @Transactional

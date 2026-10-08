@@ -1,4 +1,4 @@
-package com.lawrence.daddio.TeamTrack.dto;
+package com.lawrence.daddio.TeamTrack.dto.update;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

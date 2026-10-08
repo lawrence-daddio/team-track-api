@@ -1,7 +1,7 @@
 package com.lawrence.daddio.TeamTrack.service;
 
 import com.lawrence.daddio.TeamTrack.dto.CommentDto;
-import com.lawrence.daddio.TeamTrack.dto.CommentUpdateDto;
+import com.lawrence.daddio.TeamTrack.dto.update.CommentUpdateDto;
 import com.lawrence.daddio.TeamTrack.entity.Comment;
 import com.lawrence.daddio.TeamTrack.mapper.CommentMapper;
 import com.lawrence.daddio.TeamTrack.repo.CommentRepository;

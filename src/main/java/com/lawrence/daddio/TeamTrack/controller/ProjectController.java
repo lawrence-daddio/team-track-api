@@ -1,6 +1,7 @@
 package com.lawrence.daddio.TeamTrack.controller;
 
 import com.lawrence.daddio.TeamTrack.dto.ProjectDto;
+import com.lawrence.daddio.TeamTrack.dto.update.ProjectUpdateDto;
 import com.lawrence.daddio.TeamTrack.service.ProjectService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +16,7 @@ import java.util.List;
 @Slf4j
 public class ProjectController {
 
-    private ProjectService service;
+    private final ProjectService service;
 
     public ProjectController(ProjectService service) {
         this.service = service;
@@ -70,6 +71,14 @@ public class ProjectController {
         ProjectDto createdProjectDto = service.createProject(projectDto);
 
         return new ResponseEntity<>(createdProjectDto, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProjectDto> updateProject(@PathVariable Long id, @Valid @RequestBody ProjectUpdateDto projectUpdateDto) {
+
+        log.info("Updating project: {} for id: {}", projectUpdateDto, id);
+        ProjectDto updatedDto = service.updateProject(id, projectUpdateDto);
+        return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

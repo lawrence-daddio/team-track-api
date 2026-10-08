@@ -1,8 +1,7 @@
 package com.lawrence.daddio.TeamTrack.controller;
 
 import com.lawrence.daddio.TeamTrack.dto.EmployeeDto;
-import com.lawrence.daddio.TeamTrack.dto.EmployeeUpdateDto;
-import com.lawrence.daddio.TeamTrack.entity.Employee;
+import com.lawrence.daddio.TeamTrack.dto.update.EmployeeUpdateDto;
 import com.lawrence.daddio.TeamTrack.service.EmployeeService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;

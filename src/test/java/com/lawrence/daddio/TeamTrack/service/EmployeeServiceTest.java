@@ -1,7 +1,7 @@
 package com.lawrence.daddio.TeamTrack.service;
 
 import com.lawrence.daddio.TeamTrack.dto.EmployeeDto;
-import com.lawrence.daddio.TeamTrack.dto.EmployeeUpdateDto;
+import com.lawrence.daddio.TeamTrack.dto.update.EmployeeUpdateDto;
 import com.lawrence.daddio.TeamTrack.entity.Employee;
 import com.lawrence.daddio.TeamTrack.mapper.EmployeeMapper;
 import com.lawrence.daddio.TeamTrack.repo.EmployeeRepository;
