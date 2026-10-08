@@ -1,7 +1,7 @@
 package com.lawrence.daddio.TeamTrack.controller;
 
 import com.lawrence.daddio.TeamTrack.dto.CommentDto;
-import com.lawrence.daddio.TeamTrack.dto.CommentUpdateDto;
+import com.lawrence.daddio.TeamTrack.dto.update.CommentUpdateDto;
 import com.lawrence.daddio.TeamTrack.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;

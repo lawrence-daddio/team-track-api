@@ -26,6 +26,7 @@ class EntityMappingTest {
         team.setName("Alpha");
         Project project = new Project();
         project.setName("Apollo");
+        project.setDescription("Moon landing");
         project.setTeam(team);
         team.getProjects().add(project);
         em.persist(team);

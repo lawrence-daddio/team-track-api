@@ -2,7 +2,7 @@ package com.lawrence.daddio.TeamTrack.controller;
 
 import com.lawrence.daddio.TeamTrack.config.SecurityConfig;
 import com.lawrence.daddio.TeamTrack.dto.CommentDto;
-import com.lawrence.daddio.TeamTrack.dto.CommentUpdateDto;
+import com.lawrence.daddio.TeamTrack.dto.update.CommentUpdateDto;
 import com.lawrence.daddio.TeamTrack.service.CommentService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
