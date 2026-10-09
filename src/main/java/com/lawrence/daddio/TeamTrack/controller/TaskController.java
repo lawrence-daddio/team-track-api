@@ -1,6 +1,7 @@
 package com.lawrence.daddio.TeamTrack.controller;
 
 import com.lawrence.daddio.TeamTrack.dto.TaskDto;
+import com.lawrence.daddio.TeamTrack.dto.update.TaskUpdateDto;
 import com.lawrence.daddio.TeamTrack.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -82,8 +83,15 @@ public class TaskController {
 
         log.info("Creating task {}", taskDto);
         TaskDto createdTaskDto = service.createTask(taskDto);
-
         return new ResponseEntity<>(createdTaskDto, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TaskDto> updateTask(@PathVariable Long id, @Valid @RequestBody TaskUpdateDto taskUpdateDto) {
+
+        log.info("Updating task {} with id {}", taskUpdateDto, id);
+        TaskDto updatedDto = service.updateTask(id, taskUpdateDto);
+        return new ResponseEntity<>(updatedDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

@@ -1,6 +1,7 @@
 package com.lawrence.daddio.TeamTrack.controller;
 
 import com.lawrence.daddio.TeamTrack.dto.TeamMembershipDto;
+import com.lawrence.daddio.TeamTrack.dto.update.TeamMembershipUpdateDto;
 import com.lawrence.daddio.TeamTrack.service.TeamMembershipService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
@@ -84,6 +85,14 @@ public class TeamMembershipController {
         TeamMembershipDto createdTeamMembership = service.createTeamMembership(teamMembershipDto);
 
         return new ResponseEntity<>(createdTeamMembership, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TeamMembershipDto> updateTeamMembership(@PathVariable("id") Long id, @Valid @RequestBody TeamMembershipUpdateDto teamMembershipUpdateDto) {
+
+        log.info("Updating team membership {} with id {}", teamMembershipUpdateDto, id);
+        TeamMembershipDto updatedTeamMembership = service.updateTeamMembership(id, teamMembershipUpdateDto);
+        return new ResponseEntity<>(updatedTeamMembership, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

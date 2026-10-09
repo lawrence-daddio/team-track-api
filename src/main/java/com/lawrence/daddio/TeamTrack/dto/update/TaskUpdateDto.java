@@ -1,20 +1,14 @@
-package com.lawrence.daddio.TeamTrack.dto;
+package com.lawrence.daddio.TeamTrack.dto.update;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-@ToString(callSuper = true)
-public class TaskDto extends AuditableDto {
-
-    private Long id;
+public class TaskUpdateDto {
 
     private Long projectId;
 
@@ -28,6 +22,4 @@ public class TaskDto extends AuditableDto {
 
     @NotNull
     private LocalDateTime dueDate;
-
-    private List<Long> commentIds;
 }

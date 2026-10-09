@@ -1,6 +1,8 @@
 package com.lawrence.daddio.TeamTrack.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,12 +36,15 @@ public class Task extends Auditable {
     @JoinColumn(name = "employee_id")
     private Employee employee;
 
+    @NotBlank
     @Column(name = "title")
     private String title;
 
+    @NotBlank
     @Column(name = "status")
     private String status;
 
+    @NotNull
     @Column(name = "due_date")
     private LocalDateTime dueDate;
 
