@@ -1,6 +1,7 @@
 package com.lawrence.daddio.TeamTrack.service;
 
 import com.lawrence.daddio.TeamTrack.dto.TaskDto;
+import com.lawrence.daddio.TeamTrack.dto.update.TaskUpdateDto;
 import com.lawrence.daddio.TeamTrack.entity.Task;
 import com.lawrence.daddio.TeamTrack.mapper.TaskMapper;
 import com.lawrence.daddio.TeamTrack.repo.EmployeeRepository;
@@ -16,35 +17,35 @@ import java.util.List;
 @Service
 public class TaskService {
 
-    private final TaskRepository repository;
+    private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
     private final EmployeeRepository employeeRepository;
     private final TaskMapper mapper;
 
-    public TaskService(TaskRepository repository, ProjectRepository projectRepository,
+    public TaskService(TaskRepository taskRepository, ProjectRepository projectRepository,
                        EmployeeRepository employeeRepository, TaskMapper mapper) {
-        this.repository = repository;
+        this.taskRepository = taskRepository;
         this.projectRepository = projectRepository;
         this.employeeRepository = employeeRepository;
         this.mapper = mapper;
     }
 
     public TaskDto getTaskById(Long id) {
-        return repository.findById(id)
+        return taskRepository.findById(id)
                 .map(mapper::TaskToTaskDto)
                 .orElse(null);
     }
 
     public List<TaskDto> getTasks() {
-        return mapper.TaskToTaskDtoList(repository.findAll());
+        return mapper.TaskToTaskDtoList(taskRepository.findAll());
     }
 
     public List<TaskDto> getTasksByProjectId(Long projectId) {
-        return mapper.TaskToTaskDtoList(repository.findByProjectId(projectId));
+        return mapper.TaskToTaskDtoList(taskRepository.findByProjectId(projectId));
     }
 
     public List<TaskDto> getTasksByEmployeeId(Long employeeId) {
-        return mapper.TaskToTaskDtoList(repository.findByEmployeeId(employeeId));
+        return mapper.TaskToTaskDtoList(taskRepository.findByEmployeeId(employeeId));
     }
 
     @Transactional
@@ -67,10 +68,32 @@ public class TaskService {
                             "Employee not found: " + employeeId)));
         }
 
-        return mapper.TaskToTaskDto(repository.save(task));
+        return mapper.TaskToTaskDto(taskRepository.save(task));
+    }
+
+    @Transactional
+    public TaskDto updateTask(Long id, TaskUpdateDto taskUpdateDto) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found for id: " + id));
+
+        //update project
+        if(taskUpdateDto.getProjectId() != null) {
+            task.setProject(projectRepository.findById(taskUpdateDto.getProjectId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found: " + taskUpdateDto.getProjectId())));
+        }
+        //update employee
+        if(taskUpdateDto.getEmployeeId() != null) {
+            task.setEmployee(employeeRepository.findById(taskUpdateDto.getEmployeeId())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found: " + taskUpdateDto.getEmployeeId())));
+        }
+
+        task.setTitle(taskUpdateDto.getTitle());
+        task.setStatus(taskUpdateDto.getStatus());
+        task.setDueDate(taskUpdateDto.getDueDate());
+        return mapper.TaskToTaskDto(taskRepository.save(task));
     }
 
     public void deleteTask(Long id) {
-        repository.deleteById(id);
+        taskRepository.deleteById(id);
     }
 }
