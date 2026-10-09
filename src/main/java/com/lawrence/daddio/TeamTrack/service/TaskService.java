@@ -76,15 +76,15 @@ public class TaskService {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found for id: " + id));
 
-        //update project
+        //update project if id is there
         if(taskUpdateDto.getProjectId() != null) {
             task.setProject(projectRepository.findById(taskUpdateDto.getProjectId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found: " + taskUpdateDto.getProjectId())));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found for id: " + taskUpdateDto.getProjectId())));
         }
-        //update employee
+        //update employee if id is there
         if(taskUpdateDto.getEmployeeId() != null) {
             task.setEmployee(employeeRepository.findById(taskUpdateDto.getEmployeeId())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found: " + taskUpdateDto.getEmployeeId())));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Employee not found for id: " + taskUpdateDto.getEmployeeId())));
         }
 
         task.setTitle(taskUpdateDto.getTitle());
@@ -93,6 +93,7 @@ public class TaskService {
         return mapper.TaskToTaskDto(taskRepository.save(task));
     }
 
+    @Transactional
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
     }
