@@ -1,6 +1,7 @@
 package com.lawrence.daddio.TeamTrack.service;
 
 import com.lawrence.daddio.TeamTrack.dto.TeamMembershipDto;
+import com.lawrence.daddio.TeamTrack.dto.update.TeamMembershipUpdateDto;
 import com.lawrence.daddio.TeamTrack.entity.TeamMembership;
 import com.lawrence.daddio.TeamTrack.mapper.TeamMembershipMapper;
 import com.lawrence.daddio.TeamTrack.repo.EmployeeRepository;
@@ -16,35 +17,35 @@ import java.util.List;
 @Service
 public class TeamMembershipService {
 
-    private final TeamMembershipRepository repository;
+    private final TeamMembershipRepository teamMembershipRepository;
     private final EmployeeRepository employeeRepository;
     private final TeamRepository teamRepository;
     private final TeamMembershipMapper mapper;
 
-    public TeamMembershipService(TeamMembershipRepository repository, EmployeeRepository employeeRepository,
+    public TeamMembershipService(TeamMembershipRepository teamMembershipRepository, EmployeeRepository employeeRepository,
                                  TeamRepository teamRepository, TeamMembershipMapper mapper) {
-        this.repository = repository;
+        this.teamMembershipRepository = teamMembershipRepository;
         this.employeeRepository = employeeRepository;
         this.teamRepository = teamRepository;
         this.mapper = mapper;
     }
 
     public TeamMembershipDto getTeamMembershipById(Long id) {
-        return repository.findById(id)
+        return teamMembershipRepository.findById(id)
                 .map(mapper::TeamMembershipToTeamMembershipDto)
                 .orElse(null);
     }
 
     public List<TeamMembershipDto> getTeamMemberships() {
-        return mapper.TeamMembershipToTeamMembershipDtoList(repository.findAll());
+        return mapper.TeamMembershipToTeamMembershipDtoList(teamMembershipRepository.findAll());
     }
 
     public List<TeamMembershipDto> getTeamMembershipsByTeamId(Long teamId) {
-        return mapper.TeamMembershipToTeamMembershipDtoList(repository.findByTeamId(teamId));
+        return mapper.TeamMembershipToTeamMembershipDtoList(teamMembershipRepository.findByTeamId(teamId));
     }
 
     public List<TeamMembershipDto> getTeamMembershipsByEmployeeId(Long employeeId) {
-        return mapper.TeamMembershipToTeamMembershipDtoList(repository.findByEmployeeId(employeeId));
+        return mapper.TeamMembershipToTeamMembershipDtoList(teamMembershipRepository.findByEmployeeId(employeeId));
     }
 
     @Transactional
@@ -62,10 +63,19 @@ public class TeamMembershipService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Team not found: " + teamId)));
 
-        return mapper.TeamMembershipToTeamMembershipDto(repository.save(teamMembership));
+        return mapper.TeamMembershipToTeamMembershipDto(teamMembershipRepository.save(teamMembership));
     }
 
+    @Transactional
+    public TeamMembershipDto updateTeamMembership(Long id, TeamMembershipUpdateDto teamMembershipUpdateDto) {
+        TeamMembership teamMembership = teamMembershipRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Team Membership not found for id: " + id));
+        teamMembership.setRole(teamMembershipUpdateDto.getRole());
+        return mapper.TeamMembershipToTeamMembershipDto(teamMembershipRepository.save(teamMembership));
+    }
+
+    @Transactional
     public void deleteTeamMembership(Long id) {
-        repository.deleteById(id);
+        teamMembershipRepository.deleteById(id);
     }
 }

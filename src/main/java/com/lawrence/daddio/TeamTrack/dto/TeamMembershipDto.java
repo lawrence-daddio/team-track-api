@@ -1,5 +1,6 @@
 package com.lawrence.daddio.TeamTrack.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,6 +13,7 @@ public class TeamMembershipDto extends AuditableDto {
 
     private Long id;
 
+    @NotBlank
     private String role;
 
     @NotNull
