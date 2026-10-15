@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(TaskController.class)
 @Import(SecurityConfig.class)
+@WithMockUser
 class TaskControllerTest {
 
     @Autowired
@@ -107,7 +109,7 @@ class TaskControllerTest {
 
         mockMvc.perform(post("/tasks")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\":\"New\",\"status\":\"OPEN\",\"projectId\":1,\"employeeId\":3}"))
+                        .content("{\"title\":\"New\",\"status\":\"OPEN\",\"projectId\":1,\"employeeId\":3,\"dueDate\":\"2026-12-31T00:00:00\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(5))
                 .andExpect(jsonPath("$.title").value("New"))
