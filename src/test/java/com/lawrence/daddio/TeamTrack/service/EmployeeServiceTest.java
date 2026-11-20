@@ -43,14 +43,14 @@ class EmployeeServiceTest {
         EmployeeDto dto = new EmployeeDto();
         dto.setEmail(email);
         dto.setPassword("pw");
-        dto.setDisplayName("Ann");
+        dto.setFullName("Ann");
         return dto;
     }
 
     private static EmployeeUpdateDto updateDto(String email) {
         EmployeeUpdateDto dto = new EmployeeUpdateDto();
         dto.setEmail(email);
-        dto.setDisplayName("Ann");
+        dto.setFullName("Ann");
         return dto;
     }
 

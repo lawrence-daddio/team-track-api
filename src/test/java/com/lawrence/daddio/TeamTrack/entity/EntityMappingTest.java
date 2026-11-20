@@ -42,7 +42,7 @@ class EntityMappingTest {
     void employeePasswordHashIsNeverSerialized() {
         Employee employee = new Employee();
         employee.setEmail("a@b.com");
-        employee.setDisplayName("Ann");
+        employee.setFullName("Ann");
         employee.setPasswordHash("secret-hash");
         em.persistAndFlush(employee);
         em.clear();

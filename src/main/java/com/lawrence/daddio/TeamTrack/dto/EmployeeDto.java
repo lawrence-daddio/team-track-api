@@ -25,7 +25,7 @@ public class EmployeeDto extends AuditableDto {
     private String password;
 
     @NotBlank
-    private String displayName;
+    private String fullName;
 
     private List<Long> taskIds;
 

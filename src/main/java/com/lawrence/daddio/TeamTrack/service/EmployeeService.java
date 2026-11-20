@@ -89,7 +89,7 @@ public class EmployeeService {
         }
         //saves if email is unchanged or does not exist already in the database
         employee.setEmail(email);
-        employee.setDisplayName(employeeUpdateDto.getDisplayName());
+        employee.setFullName(employeeUpdateDto.getFullName());
 
         if (employeeUpdateDto.getPassword() != null && !employeeUpdateDto.getPassword().isBlank()) {
             employee.setPasswordHash(passwordEncoder.encode(employeeUpdateDto.getPassword()));

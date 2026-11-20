@@ -16,6 +16,6 @@ public class EmployeeUpdateDto {
     private String password;
 
     @NotBlank
-    private String displayName;
+    private String fullName;
 
 }

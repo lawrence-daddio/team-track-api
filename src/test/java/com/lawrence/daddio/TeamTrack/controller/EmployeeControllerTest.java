@@ -28,6 +28,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser
 class EmployeeControllerTest {
 
+    @MockitoBean
+    private org.springframework.security.oauth2.jwt.JwtDecoder jwtDecoder;
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -38,7 +41,7 @@ class EmployeeControllerTest {
         EmployeeDto dto = new EmployeeDto();
         dto.setId(id);
         dto.setEmail(email);
-        dto.setDisplayName("Ann");
+        dto.setFullName("Ann");
         dto.setTaskIds(List.of(1L));
         dto.setTeamMembershipIds(List.of(2L));
         dto.setCommentIds(List.of(3L));
@@ -53,7 +56,7 @@ class EmployeeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.email").value("ann@x.com"))
-                .andExpect(jsonPath("$.displayName").value("Ann"))
+                .andExpect(jsonPath("$.fullName").value("Ann"))
                 .andExpect(jsonPath("$.taskIds[0]").value(1));
     }
 
@@ -89,7 +92,7 @@ class EmployeeControllerTest {
 
         mockMvc.perform(post("/employees")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"email\":\"new@x.com\",\"displayName\":\"Ann\"}"))
+                        .content("{\"email\":\"new@x.com\",\"fullName\":\"Ann\"}"))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(9))
                 .andExpect(jsonPath("$.email").value("new@x.com"));

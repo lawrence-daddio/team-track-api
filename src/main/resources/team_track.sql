@@ -1,7 +1,7 @@
-INSERT INTO Employee(id, email, password_hash, display_name) VALUES
-    (NEXT VALUE FOR employee_seq, 'alice.johnson@example.com', 'hashed_password_1', 'Alice Johnson'),
-    (NEXT VALUE FOR employee_seq, 'bob.smith@example.com',     'hashed_password_2', 'Bob Smith'),
-    (NEXT VALUE FOR employee_seq, 'carol.davis@example.com',   'hashed_password_3', 'Carol Davis');
+INSERT INTO Employee(id, email, password_hash, full_name) VALUES
+    (NEXT VALUE FOR employee_seq, 'alice.johnson@example.com', '{bcrypt}$2a$10$09NYGHZ4.h7GnF9A8ZznveRVvXU2fmCU9fedI3bEdnnekyHfkMVZK', 'Alice Johnson'),
+    (NEXT VALUE FOR employee_seq, 'bob.smith@example.com',     '{bcrypt}$2a$10$Yam/vPX33pZopz4wIpMhEOhhZa5Tzt.osAFzPMQN1YkL2HFGb20n.', 'Bob Smith'),
+    (NEXT VALUE FOR employee_seq, 'carol.davis@example.com',   '{bcrypt}$2a$10$JkVZ/.66qFsgpGfcNo9JNOGZ1vMmyyFHQwKj9CjWsRHwok/k1.6ui', 'Carol Davis');
 
 INSERT INTO team(id, name) VALUES
     (NEXT VALUE FOR team_seq, 'Platform'),
