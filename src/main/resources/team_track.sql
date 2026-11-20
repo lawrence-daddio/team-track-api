@@ -1,4 +1,4 @@
-INSERT INTO Employee(id, email, password_hash, display_name) VALUES
+INSERT INTO Employee(id, email, password_hash, full_name) VALUES
     (NEXT VALUE FOR employee_seq, 'alice.johnson@example.com', 'hashed_password_1', 'Alice Johnson'),
     (NEXT VALUE FOR employee_seq, 'bob.smith@example.com',     'hashed_password_2', 'Bob Smith'),
     (NEXT VALUE FOR employee_seq, 'carol.davis@example.com',   'hashed_password_3', 'Carol Davis');
