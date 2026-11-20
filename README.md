@@ -65,10 +65,24 @@ How it works:
   request. The app is stateless (no sessions).
 - `JwtConfig` builds the key, encoder and decoder from the properties below.
 
-> **Seed logins (dev only):** the seeded employees `alice.johnson@example.com`, `bob.smith@example.com` and
-> `carol.davis@example.com` have the passwords `password1`, `password2` and `password3`. They are stored as
-> `{bcrypt}` hashes in `team_track.sql` (Spring's `DelegatingPasswordEncoder` format). To create a new hash, encode the
-> password with `PasswordEncoderFactories.createDelegatingPasswordEncoder()`.
+## Test users
+
+Development-only logins seeded by `src/main/resources/team_track.sql`. Do not reuse these passwords anywhere real.
+The database is in-memory, so they are recreated on every restart.
+
+| Name          | Username (email)            | Password    |
+|---------------|-----------------------------|-------------|
+| Alice Johnson | `alice.johnson@example.com` | `password1` |
+| Bob Smith     | `bob.smith@example.com`     | `password2` |
+| Carol Davis   | `carol.davis@example.com`   | `password3` |
+
+To use one in Postman or Insomnia: `POST http://localhost:8080/auth/login` with the JSON body
+`{"email": "...", "password": "..."}`, copy `token` from the response, then set Authorization to **Bearer Token** on
+other requests (see [Authentication](#authentication) for curl examples). A wrong email or password returns `401`.
+
+Passwords are stored as `{bcrypt}` hashes (Spring's `DelegatingPasswordEncoder` format). To create a new hash, encode
+the password with `PasswordEncoderFactories.createDelegatingPasswordEncoder()`, or create the user through
+`POST /employees`, which hashes the password for you.
 
 ## API overview
 
