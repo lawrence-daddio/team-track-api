@@ -47,7 +47,9 @@ the login name is the employee's email, and the password is checked against `pas
 
 ```bash
 # 1. Log in
-curl -X POST http://localhost:8080/auth/login   -H "Content-Type: application/json"   -d '{"email":"alice.johnson@example.com","password":"<password>"}'
+curl -X POST http://localhost:8080/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"alice.johnson@example.com","password":"password1"}'
 # -> {"token":"eyJ...","expiresIn":3600000}      (expiresIn is in milliseconds; 401 on bad credentials)
 
 # 2. Call the API with the token
@@ -63,9 +65,10 @@ How it works:
   request. The app is stateless (no sessions).
 - `JwtConfig` builds the key, encoder and decoder from the properties below.
 
-> **Seed data caveat:** the seeded employees in `team_track.sql` have placeholder password hashes with no
-> `{bcrypt}` (or other encoder-id) prefix, so they cannot log in until you replace them with real hashes.
-> Passwords are stored with Spring's `DelegatingPasswordEncoder`.
+> **Seed logins (dev only):** the seeded employees `alice.johnson@example.com`, `bob.smith@example.com` and
+> `carol.davis@example.com` have the passwords `password1`, `password2` and `password3`. They are stored as
+> `{bcrypt}` hashes in `team_track.sql` (Spring's `DelegatingPasswordEncoder` format). To create a new hash, encode the
+> password with `PasswordEncoderFactories.createDelegatingPasswordEncoder()`.
 
 ## API overview
 
@@ -110,7 +113,6 @@ There is no authorization yet: any authenticated employee can call any endpoint.
 ## Roadmap
 
 - [x] JWT authentication (replacing basic auth)
-- [ ] Seed employees with valid password hashes
 - [ ] Add role-based access control (RBAC) based on team roles
 - [ ] Frontend
 - [ ] Persistent database
