@@ -20,6 +20,7 @@ public interface EmployeeMapper {
     @Mapping(target = "comments", ignore = true)
     @Mapping(target = "teamMemberships", ignore = true)
     @Mapping(target = "passwordHash", ignore = true)
+    @Mapping(target = "authorities", ignore = true)
     Employee employeeDtoToEmployee(EmployeeDto employeeDto);
 
     @Mapping(target = "taskIds", source = "tasks")

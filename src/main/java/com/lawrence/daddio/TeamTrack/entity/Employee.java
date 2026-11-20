@@ -1,5 +1,6 @@
 package com.lawrence.daddio.TeamTrack.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -64,12 +65,17 @@ public class Employee extends Auditable implements UserDetails {
         return Employee.class.hashCode();
     }
 
+    // ---- UserDetails: lets an Employee act as the Spring Security user (username = email) ----
+
+    /** No roles yet; role-based access control is planned. */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
     }
 
+    /** The encoded password hash. {@code @JsonIgnore} keeps it out of serialized output. */
     @Override
+    @JsonIgnore
     public @Nullable String getPassword() {
         return this.passwordHash;
     }
